@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html ng-app="Controller">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Gestão Smart</title>
+        <link rel="stylesheet" href="css/ordem.css"> 
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="css/menu.css" rel="stylesheet">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
+        <link href="css/animate.min.css" rel="stylesheet">
+        <link href="css/prettyPhoto.css" rel="stylesheet">
+        <link href="css/main.css" rel="stylesheet">
+        <link href="css/responsive.css" rel="stylesheet">
+        <link href="css/bootstrap-multiselect.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+        <link href="css/my-md-select.css" rel="stylesheet">
+        <!-- Latest compiled and minified CSS -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular-cookies.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular-animate.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular-aria.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular-messages.min.js"></script>
+
+        <!-- Angular Material Library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+        <script src="fronts/controller/controller.js"></script>
+
+        <script src="js/jquery.js"></script> 
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/jquery.prettyPhoto.js"></script>
+        <script src="js/jquery.isotope.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/wow.min.js"></script>
+        <script src="js/jquery.mask.js"></script>
+        <script src="js/bootstrap-datepicker.js"></script>
+        <script src="js/locales/bootstrap-datepicker.pt-BR.js"></script>
+        <script src="js/cadastro_fisica.js"></script>
+        <script src="js/bootstrap-multiselect.js"></script>
+        
+        <script src="fronts/controller/controller.js"></script>
+    </head>
+
+<body ng-controller="Controller" class="container-fluid" 
+        ng-init="receber();consultaOrdemServico();consultaProduto();consultaServico();">
+    <header id="header">
+        <div class="top-bar">
+            <div class="container">
+                <div class="row" align="center">
+                    <div class="col-sm-12">
+                        <div><p class="para">Olá, {{usuario}}</p></div>
+                    </div>
+                </div>
+            </div><!--/.container-->
+        </div><!--/.top-bar-->
+    </header>   
+ 	<form id="formulario" class="container userForm ">
+ 		<div class="row">
+ 			<span id="btn-glyphicon" class="glyphicon glyphicon-list" ></span>
+ 		</div>
+
+<!-- Note the missing multiple attribute! -->
+
+            <h2> Ordens de Serviços </h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;"> Chave </th>
+                        <th> Cliente </th>  
+                        <th> Produto </th> 
+                        <th> Serviço </th> 
+                        <th> Valor </th> 
+                        <th style="text-align: center;"> Remover </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="os in ordem_servico">
+                        <td style="vertical-align: middle; text-align: center;"> {{os.id_ordem_servico}} </td>
+                        <td style="vertical-align: middle;"> {{os.nome}} </td>
+                        <td> 
+                            <md-input-container>
+                                <label></label>
+                                <md-select ng-model="os.produto" md-on-close="clearSearchTerm(); checkbox_selected=false;" class="my-select" aria-label="produto"
+                                    data-md-container-class="selectdemoSelectHeader" multiple>
+                                    <md-select-header class="demo-select-header">
+                                        <input ng-model="searchTerm" type="search" class="demo-header-searchbox md-text" 
+                                            placeholder="Procure um produto..." ng-keydown="pararPropagacao($event)"/>
+                                    </md-select-header>
+                                    <md-select-header class="demo-select form-control">
+                                        <md-checkbox  ng-model="checkbox_selected">
+                                            Mostrar somente Selecionados
+                                        </md-checkbox>
+                                    </md-select-header>
+                                    <md-optgroup label="produtos">
+                                        <md-option ng-value="p.id_produto" ng-repeat="p in produto | filter:searchTerm" ng-disabled="true"
+                                            ng-hide="checkbox_selected && os.produto.indexOf(p.id_produto) == -1">
+                                            {{p.nome_produto}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </td>
+                        <td> 
+                            <md-input-container>
+                                <label></label>
+                                <md-select ng-model="os.servico" md-on-close="clearSearchTerm(); checkbox_selected=false;" class="my-select" aria-label="servico"
+                                    data-md-container-class="selectdemoSelectHeader" multiple>
+                                    <md-select-header class="demo-select-header">
+                                        <input ng-model="searchTerm2" type="search" class="demo-header-searchbox md-text" 
+                                            placeholder="Procure um serviço..." ng-keydown="pararPropagacao($event)"/>
+                                    </md-select-header>
+                                    <md-select-header class="demo-select form-control">
+                                        <md-checkbox  ng-model="checkbox_selected">
+                                            Mostrar somente Selecionados
+                                        </md-checkbox>
+                                    </md-select-header>
+                                    <md-optgroup label="servicos">
+                                        <md-option ng-value="s.id_servico" ng-repeat="s in servico | filter:searchTerm2"  ng-disabled="true"
+                                            ng-hide="checkbox_selected && os.servico.indexOf(s.id_servico) == -1">
+                                            {{s.nome_servico}}
+                                        </md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </td>
+                        <td style="vertical-align: middle;"> {{os.valor_os}} </td>
+                        <td style="vertical-align: middle; text-align: center;"> 
+                            <a ng-click="removeOS($index)"> 
+                                <span class="glyphicon glyphicon-trash"></span> 
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>    
+            </table>         
+ 	</form>
+        
+    <section id="no-margin">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 wow fadeInDown">
+                    <div class="tab-wrap ">
+                        <div class="media">
+                            <div class="parrent">
+                                <ul class="nav nav-tabs nav-stacked">
+                                    <li>
+                                        <a href="/menu" class="agoravai analistic-01" id="control_Form">
+                                            <b>Menu</b>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="/logout">
+                                            <b>Sair
+                                                <span class="glyphicon glyphicon-log-out"></span>
+                                            </b>
+                                        </a>
+                                    </li>
+                                    <li data-toggle="collapse" data-target="#new2" class="collapsed">
+                                        <a href="">
+                                            <b>Cadastrar &nbsp;Cliente&emsp;
+                                                <span class="glyphicon glyphicon-floppy-disk "></span>
+                                            </b>
+                                        </a>
+                                    </li>
+                                    <ul class="sub-menu collapse  nav nav-tabs nav-stacked" id="new2">
+                                        <li>
+                                            <a href="/cadastro_fisica">
+                                                <b>Pessoa Fisica
+                                                    <i class="material-icons">&#xe145;</i>
+                                                </b>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/cadastro_juridica">
+                                                <b>Pessoa Juridica
+                                                    <i class="material-icons">&#xe145;</i>
+                                                </b>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <li data-toggle="collapse" data-target="#new" class="collapsed">
+                                        <a href="">
+                                            <b>Cadastrar &nbsp;Itens&emsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <span class="glyphicon glyphicon-floppy-disk "></span>
+                                            </b>
+                                        </a>
+                                    </li>
+                                    <ul class="sub-menu collapse  nav nav-tabs nav-stacked" id="new">
+                                        <li>
+                                            <a href="/Produtos">
+                                                <b>Produto
+                                                    <i class="material-icons">&#xe854;</i>
+                                                </b>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/Servicos">
+                                                <b>Serviço
+                                                    <i class="material-icons">&#xe869;</i>
+                                                </b>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <li data-toggle="collapse" data-target="#new3" class="collapsed">
+                                        <a href="">
+                                            <b>Ordem de &nbsp;Serviço&emsp;
+                                                <span class="glyphicon glyphicon-list-alt "></span>
+                                            </b>
+                                        </a>
+                                    </li>
+                                    <ul class="sub-menu collapse  nav nav-tabs nav-stacked" id="new3">
+                                        <li>
+                                            <a href="/Ordem_servico">
+                                                <b>Efetuar
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                </b>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="Atualizar_Ordem_Servico">
+                                                <b>Atualizar
+                                                    <span class="glyphicon glyphicon-refresh "></span>
+                                                </b>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="Remover_Ordem_Servico">
+                                                <b>Excluir
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </b>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="Visualizar_Ordem_Servico">
+                                                <b>Visualizar
+                                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                                </b>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/gerar_relatorio">
+                                                <b>Imprimir
+                                                    <span class="glyphicon glyphicon-print"></span>
+                                                </b>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <li class="menu-2">
+                                        <a class="menu-22"></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--/.media-->
+                    </div>
+                    <!--/.tab-wrap-->
+                </div>
+                <!--/.col-sm-6-->
+            </div>
+            <!--/.row-->
+        </div>
+        <!--/.container-->
+    </section>
+
+  <footer id="footer" class="footer">
+        <div class="container">
+            <div class="row" align="center">
+                <div class="col-sm-12">
+                    <b>
+                        &copy; Copyright 2017 - Gestão Smart</b>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        $("#btn-glyphicon").click(function () {
+            if ($("#formulario").hasClass('userForm')){
+                $("#formulario").removeClass("userForm");
+                $("#no-margin").hide();
+            }
+            else {
+                $("#formulario").addClass("userForm");
+                $("#no-margin").show();
+            }
+        });
+    </script>
+</body>
+ 
+</html>
